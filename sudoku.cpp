@@ -69,18 +69,25 @@ FILE* carregue(char quadro[9][9]) {
 
 		// carregar novo sudoku
 		case 1:
+			//carregue_novo_jogo(quadro[9][9], *nome_arquivo);
+		//reiniciar jogo anterior e começar um novo jogo aleatório
+		//Na opção1 será solicitado o nome de um arquivo.txt para carregar o Sudoku
 			break;
 
 		// continuar jogo
 		case 2:
+			//carregue_continue_jogo(quadro[9][9], *nome_arquivo);
+			//pegar jogo anterior
 			break;
 
 		// retornar ao menu anterior
 		case 9:
+			menu();
 			break;
 
 		default:
-			break;
+		break;
+	}
 }
 
 /* -----------------------------------------------------------------------------
@@ -90,6 +97,19 @@ FILE* carregue(char quadro[9][9]) {
  */
 FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
 	// TODO
+	// solicitar nome do binário para continuar
+	//nome: um número inteiro n(número de jogadas e n+1 quadros)
+	// jogadas = 0's
+	// se for válida salvar no arquivo binário (chamar salve_jogada_bin)
+	//
+	// Formato do arquivo binário para o estado do jogo de Sudoku:
+	//
+	// - Os primeiros 4 bytes armazenam a quantidade de jogadas (um inteiro).
+	// - Após estes 4 bytes, são armazenados os 81 bytes que representam o estado inicial do quadro.
+	// - Para cada jogada realizada, o estado atual do quadro (81 bytes) é adicionado ao final do arquivo.
+	// 
+	// Cada elemento do quadro é armazenado como um char (1 byte) representando os números de 0 a 9.
+
 }
 
 /* -----------------------------------------------------------------------------
@@ -98,7 +118,9 @@ FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
-	// TODO
+	// solicitar nome de arquivo para carregar sudoku
+	//gera novo sudoku com numero de 0 a 9 (9*9), exemplos no repo
+
 }
 
 /* -----------------------------------------------------------------------------
