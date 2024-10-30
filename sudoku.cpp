@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h> //nova biblioteca adicionada
 
 /* Constantes */
 #define ERROR_FILE_MSG	"Nao foi possivel abrir o arquivo!\n"
@@ -63,20 +64,34 @@ FILE* carregue(char quadro[9][9]) {
 	menu_arquivo();
 	opcao = leia_opcao();
 
-	// TODO Função incompleta
-
 	switch(opcao) {
 
 		// carregar novo sudoku
 		case 1:
-			//carregue_novo_jogo(quadro[9][9], *nome_arquivo);
-		//reiniciar jogo anterior e começar um novo jogo aleatório
-		//Na opção1 será solicitado o nome de um arquivo.txt para carregar o Sudoku
+			FILE *f;
+			char nome[50];
+			printf("Qual é o nome do seu jogo.txt? ");
+			scanf("%s", &nome);
+			f = fopen(nome, "r");
+				if (f == NULL) {
+					printf("Erro ao abrir o arquivo de texto, arquivo não existe!\n");
+					return;
+			}
+			carregue_novo_jogo(quadro, nome);
+			//reiniciar jogo anterior e começar um novo jogo aleatório
 			break;
 
 		// continuar jogo
 		case 2:
-			//carregue_continue_jogo(quadro[9][9], *nome_arquivo);
+			printf("Insira o nome do jogo que deseja continuar: ");
+			scanf("%s", &nome); //precisa verificar  validade (o arquivo existe mesmo?)
+			
+			FILE *fb = fopen(nome, "rb");
+			if (fb == NULL) {
+				printf("Erro ao abrir, o arquivo não existe!\n");
+				return NULL;
+			}
+			carregue_continue_jogo(quadro, nome);
 			//pegar jogo anterior
 			break;
 
@@ -96,20 +111,11 @@ FILE* carregue(char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
-	// TODO
-	// solicitar nome do binário para continuar
-	//nome: um número inteiro n(número de jogadas e n+1 quadros)
-	// jogadas = 0's
-	// se for válida salvar no arquivo binário (chamar salve_jogada_bin)
-	//
-	// Formato do arquivo binário para o estado do jogo de Sudoku:
-	//
-	// - Os primeiros 4 bytes armazenam a quantidade de jogadas (um inteiro).
-	// - Após estes 4 bytes, são armazenados os 81 bytes que representam o estado inicial do quadro.
-	// - Para cada jogada realizada, o estado atual do quadro (81 bytes) é adicionado ao final do arquivo.
-	// 
-	// Cada elemento do quadro é armazenado como um char (1 byte) representando os números de 0 a 9.
+	int jogadas;
+	char nome[50];
+	
 
+	return fb;
 }
 
 /* -----------------------------------------------------------------------------
@@ -118,9 +124,23 @@ FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
-	// solicitar nome de arquivo para carregar sudoku
-	//gera novo sudoku com numero de 0 a 9 (9*9), exemplos no repo
+	FILE *f; //txt
+	FILE *fb; // binário
 
+	f = fopen(nome_arquivo, "w");
+	
+	for (int i = 0; i < 9; ++i) {
+        for (int j = 0; j < 9; ++j) {
+            fscanf(f, "%1d", (int*)&quadro[i][j]);
+        }
+    }
+	//a partir daqui salvar em binário? e agora...
+	fb = fopen(nome_arquivo, "wb");
+	fwrite(quadro, sizeof(char), 81, fb);
+
+    fclose(f);
+	fclose(fb);
+	//verificar se arquivo existe e é valido?
 }
 
 /* -----------------------------------------------------------------------------
@@ -129,7 +149,19 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 FILE* crie_arquivo_binario(char quadro[9][9]) {
-	// TODO
+	FILE *fb;
+	int jogadas; //contar 0's?
+	char nome[50];
+
+	gen_random(nome, 20);
+	strcat(nome, ".bin");
+	// gerar arquivo binário com o npme aleatório para salvar o quadro atual
+	fb = fopen(nome, "wb");
+	fwrite(&jogadas, sizeof(int), 1, fb);
+	fwrite(quadro, sizeof(char), 81, fb);
+	// adicionar novos quadros a cada jogada válida
+
+	return fb;
 }
 
 /* -----------------------------------------------------------------------------
