@@ -74,25 +74,24 @@ FILE* carregue(char quadro[9][9]) {
 			scanf("%s", &nome);
 			f = fopen(nome, "r");
 				if (f == NULL) {
-					printf("Erro ao abrir o arquivo de texto, arquivo não existe!\n");
+					printf(ERROR_FILE_MSG);
 					return;
 			}
 			carregue_novo_jogo(quadro, nome);
-			//reiniciar jogo anterior e começar um novo jogo aleatório
 			break;
 
 		// continuar jogo
 		case 2:
 			printf("Insira o nome do jogo que deseja continuar: ");
 			scanf("%s", &nome); //precisa verificar  validade (o arquivo existe mesmo?)
+			//não precisa informar o nome dos binários diponíveis?
 			
 			FILE *fb = fopen(nome, "rb");
 			if (fb == NULL) {
-				printf("Erro ao abrir, o arquivo não existe!\n");
+				printf(ERROR_FILE_MSG);
 				return NULL;
 			}
-			carregue_continue_jogo(quadro, nome);
-			//pegar jogo anterior
+			carregue_continue_jogo(quadro, nome); // que quadro é esse?
 			break;
 
 		// retornar ao menu anterior
@@ -111,11 +110,8 @@ FILE* carregue(char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
-	int jogadas;
-	char nome[50];
-	
-
-	return fb;
+	//falta tipo tudo
+	//salvar quadro atual no arquivo binário de nome aleatório?
 }
 
 /* -----------------------------------------------------------------------------
@@ -134,12 +130,11 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
             fscanf(f, "%1d", (int*)&quadro[i][j]);
         }
     }
-	//a partir daqui salvar em binário? e agora...
-	fb = fopen(nome_arquivo, "wb");
-	fwrite(quadro, sizeof(char), 81, fb);
+	
+	crie_arquivo_binario(quadro);
 
-    fclose(f);
-	fclose(fb);
+    //fclose(f);
+	//fclose(fb);
 	//verificar se arquivo existe e é valido?
 }
 
@@ -150,7 +145,7 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
  */
 FILE* crie_arquivo_binario(char quadro[9][9]) {
 	FILE *fb;
-	int jogadas; //contar 0's?
+	int jogadas; //contar 0's (falta isso)
 	char nome[50];
 
 	gen_random(nome, 20);
@@ -159,7 +154,7 @@ FILE* crie_arquivo_binario(char quadro[9][9]) {
 	fb = fopen(nome, "wb");
 	fwrite(&jogadas, sizeof(int), 1, fb);
 	fwrite(quadro, sizeof(char), 81, fb);
-	// adicionar novos quadros a cada jogada válida
+	// adicionar novos quadros a cada jogada válida (falta isso?)
 
 	return fb;
 }
