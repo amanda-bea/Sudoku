@@ -83,7 +83,7 @@ FILE* carregue(char quadro[9][9]) {
 		// continuar jogo
 		case 2:
 			printf("Insira o nome do jogo que deseja continuar: ");
-			scanf("%s", &nome); //precisa verificar  validade (o arquivo existe mesmo?)
+			scanf("%s", &nome);
 			//não precisa informar o nome dos binários diponíveis?
 			
 			FILE *fb = fopen(nome, "rb");
@@ -91,7 +91,7 @@ FILE* carregue(char quadro[9][9]) {
 				printf(ERROR_FILE_MSG);
 				return NULL;
 			}
-			carregue_continue_jogo(quadro, nome); // que quadro é esse?
+			carregue_continue_jogo(quadro, nome);
 			break;
 
 		// retornar ao menu anterior
@@ -110,8 +110,24 @@ FILE* carregue(char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
-	//falta tipo tudo
-	//salvar quadro atual no arquivo binário de nome aleatório?
+	//como usuário vai saber o nome do arquivo? mudar nome a cada jogada? FUNÇÃO CERTA?
+	//qual a diferença de carregue_continue_jogo e salve_jogada_bin em código e parametros
+	FILE *fb;
+	int jogadas;
+
+	fb = fopen(nome_arquivo, "r+b");
+
+	//lendo e atualizando jogadas
+    fread(&jogadas, sizeof(int), 1, fb);
+	jogadas++; 
+	fseek(fb, 0, SEEK_SET);
+    fwrite(&jogadas, sizeof(int), 1, fb);
+
+	//posicionando ponteiro para escrever novo quadro
+	fseek(fb, 0, SEEK_END);
+    fwrite(quadro, sizeof(char), 81, fb);
+
+	return fb;
 }
 
 /* -----------------------------------------------------------------------------
@@ -133,7 +149,7 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 	
 	crie_arquivo_binario(quadro);
 
-    //fclose(f);
+    fclose(f);
 	//fclose(fb);
 	//verificar se arquivo existe e é valido?
 }
@@ -145,12 +161,12 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
  */
 FILE* crie_arquivo_binario(char quadro[9][9]) {
 	FILE *fb;
-	int jogadas; //contar 0's (falta isso)
+	int jogadas = 1;
 	char nome[50];
 
-	gen_random(nome, 20);
+	gen_random(nome, 10);
 	strcat(nome, ".bin");
-	// gerar arquivo binário com o npme aleatório para salvar o quadro atual
+
 	fb = fopen(nome, "wb");
 	fwrite(&jogadas, sizeof(int), 1, fb);
 	fwrite(quadro, sizeof(char), 81, fb);
