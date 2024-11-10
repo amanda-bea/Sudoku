@@ -73,11 +73,14 @@ FILE* carregue(char quadro[9][9]) {
 			printf("Qual é o nome do seu jogo.txt? ");
 			scanf("%s", &nome);
 			f = fopen(nome, "r");
-				if (f == NULL) {
-					printf(ERROR_FILE_MSG);
-					return;
+			if (f == NULL) {
+				printf(ERROR_FILE_MSG);
+				return;
 			}
-			carregue_novo_jogo(quadro, nome);
+			else{
+				carregue_novo_jogo(quadro, nome);
+			}
+			
 			break;
 
 		// continuar jogo
@@ -91,7 +94,10 @@ FILE* carregue(char quadro[9][9]) {
 				printf(ERROR_FILE_MSG);
 				return NULL;
 			}
-			carregue_continue_jogo(quadro, nome);
+			else {
+				carregue_continue_jogo(quadro, nome);
+			}
+
 			break;
 
 		// retornar ao menu anterior
@@ -109,25 +115,17 @@ FILE* carregue(char quadro[9][9]) {
  * Carrega um estado de jogo a partir de um arquivo binario
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
-FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
-	//como usuário vai saber o nome do arquivo? mudar nome a cada jogada? FUNÇÃO CERTA?
-	//qual a diferença de carregue_continue_jogo e salve_jogada_bin em código e parametros
-	FILE *fb;
-	int jogadas;
+FILE* carregue_continue_jogo(char quadro[9][9], char *nome_arquivo) {
+    // Abrir o arquivo binário para leitura
+    FILE *fb = fopen(nome_arquivo, "rb");
 
-	fb = fopen(nome_arquivo, "r+b");
+    // Mover o ponteiro do arquivo para 81 caracteres antes do final
+    fseek(fb, -81, SEEK_END);
 
-	//lendo e atualizando jogadas
-    fread(&jogadas, sizeof(int), 1, fb);
-	jogadas++; 
-	fseek(fb, 0, SEEK_SET);
-    fwrite(&jogadas, sizeof(int), 1, fb);
-
-	//posicionando ponteiro para escrever novo quadro
-	fseek(fb, 0, SEEK_END);
-    fwrite(quadro, sizeof(char), 81, fb);
-
-	return fb;
+    // Ler os últimos 81 caracteres do arquivo binário e armazenar na matriz quadro
+    fread(quadro, sizeof(char), 9 * 9, fb);
+    
+    return fb;
 }
 
 /* -----------------------------------------------------------------------------
@@ -137,9 +135,8 @@ FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
  */
 void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 	FILE *f; //txt
-	FILE *fb; // binário
 
-	f = fopen(nome_arquivo, "w");
+	f = fopen(nome_arquivo, "r");
 	
 	for (int i = 0; i < 9; ++i) {
         for (int j = 0; j < 9; ++j) {
@@ -150,7 +147,6 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 	crie_arquivo_binario(quadro);
 
     fclose(f);
-	//fclose(fb);
 	//verificar se arquivo existe e é valido?
 }
 
@@ -162,7 +158,7 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 FILE* crie_arquivo_binario(char quadro[9][9]) {
 	FILE *fb;
 	int jogadas = 1;
-	char nome[50];
+	char nome[20];
 
 	gen_random(nome, 10);
 	strcat(nome, ".bin");
@@ -170,7 +166,6 @@ FILE* crie_arquivo_binario(char quadro[9][9]) {
 	fb = fopen(nome, "wb");
 	fwrite(&jogadas, sizeof(int), 1, fb);
 	fwrite(quadro, sizeof(char), 81, fb);
-	// adicionar novos quadros a cada jogada válida (falta isso?)
 
 	return fb;
 }
@@ -365,6 +360,7 @@ void jogue() {
 
 		case 9:
 			puts("Programa finalizado ..");
+			fclose(fb);
 			break;
 
 		default:
@@ -401,7 +397,21 @@ void resolve_um_passo(char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
-	// TODO
+    //arquivo já vem aberto?
+	//quando imprimir?
+    fb = fopen("nome_arquivo", "r+b");
+    int jogadas;
+
+    fread(&jogadas, sizeof(char), 1, fb);
+    jogadas++;
+
+    fseek(fb, 0, SEEK_SET);
+    fwrite(&jogadas, sizeof(char), 1, fb);
+
+    fseek(fb, 0, SEEK_END);
+    fwrite(quadro, sizeof(char), 9 * 9, fb);
+
+    fclose(fb);
 }
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
