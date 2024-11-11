@@ -115,7 +115,7 @@ FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
 	char nome[50];
 	
 
-	return fb;
+
 }
 
 /* -----------------------------------------------------------------------------
@@ -214,7 +214,12 @@ int eh_valido(const char quadro[9][9], int x, int y, int valor) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 int eh_valido_na_coluna(const char quadro[9][9], int y, int valor) {
-	// TODO
+	for (int i = 0; i < 9; i++)
+	{
+		if (valor == quadro[i][y])
+			return 0;
+	}
+	return 1;
 }
 
 /* -----------------------------------------------------------------------------
@@ -223,7 +228,12 @@ int eh_valido_na_coluna(const char quadro[9][9], int y, int valor) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 int eh_valido_na_linha(const char quadro[9][9], int x, int valor) {
-	// TODO
+		for (int i = 0; i < 9; i++)
+	{
+		if (valor == quadro[x][i])
+			return 0;
+	}
+	return 1;
 }
 
 /* -----------------------------------------------------------------------------
@@ -232,7 +242,19 @@ int eh_valido_na_linha(const char quadro[9][9], int x, int valor) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 int eh_valido_no_quadrante3x3(const char quadro[9][9], int x, int y, int valor) {
-	// TODO
+	int q = determine_quadrante(x,y);
+
+	for (int i = ini_x(q); i < fim_x(q); i++)
+	{
+		for (int j = ini_y(q); j < fim_y(q); j++)
+		{
+			if(valor == quadro[i][j])
+				return 0;
+		}
+	}
+
+	return 1;
+	
 }
 
 /* -----------------------------------------------------------------------------
