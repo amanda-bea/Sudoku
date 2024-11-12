@@ -60,31 +60,32 @@ int main() {
  */
 FILE* carregue(char quadro[9][9]) {
 	int opcao;
-
+	char nome[50];
 	menu_arquivo();
 	opcao = leia_opcao();
 
 	switch(opcao) {
 
 		// carregar novo sudoku
-		case 1:
+		case 1:{
 			FILE *f;
-			char nome[50];
+			
 			printf("Qual é o nome do seu jogo.txt? ");
 			scanf("%s", &nome);
 			f = fopen(nome, "r");
 			if (f == NULL) {
 				printf(ERROR_FILE_MSG);
-				return;
+				
 			}
 			else{
 				carregue_novo_jogo(quadro, nome);
 			}
-			
-			break;
 
+			return f;
+			break;
+		}
 		// continuar jogo
-		case 2:
+		case 2:{
 			printf("Insira o nome do jogo que deseja continuar: ");
 			scanf("%s", &nome);
 			//não precisa informar o nome dos binários diponíveis?
@@ -99,7 +100,7 @@ FILE* carregue(char quadro[9][9]) {
 			}
 
 			break;
-
+		}
 		// retornar ao menu anterior
 		case 9:
 			menu();
@@ -108,6 +109,7 @@ FILE* carregue(char quadro[9][9]) {
 		default:
 		break;
 	}
+
 }
 
 /* -----------------------------------------------------------------------------
@@ -410,7 +412,28 @@ void resolve_completo(FILE *fb, char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 void resolve_um_passo(char quadro[9][9]) {
-	// TODO
+	for(int i = 0; i < 9; i++){
+		for (int j = 0; j < 9; j++)
+		{
+			int cont = 0;
+			int aux;
+
+			if(quadro[i][j] == 0){
+				for(int l = 1; l < 10; l++){
+					if(eh_valido(quadro, i, j, l)){
+						cont += 1;
+						aux = l;
+					}
+				}
+				
+				if (cont == 1){
+					quadro[i][j] = aux;
+					return;
+				}
+			}
+		}
+		
+	}
 }
 
 /* -----------------------------------------------------------------------------
