@@ -71,6 +71,7 @@ FILE* carregue(char quadro[9][9]) {
 
 		// carregar novo sudoku
 		case 1:{
+			//conferir de arquivo é válido
 			FILE *f;
 			
 			printf("Qual é o nome do seu jogo.txt? ");
@@ -90,9 +91,9 @@ FILE* carregue(char quadro[9][9]) {
 		}
 		// continuar jogo
 		case 2:{
+			//conferir de arquivo é válido
 			printf("Insira o nome do jogo que deseja continuar: ");
 			scanf("%s", &nome);
-			//não precisa informar o nome dos binários diponíveis?
 			
 			FILE *fb = fopen(nome, "rb");
 			if (fb == NULL) {
@@ -123,8 +124,8 @@ FILE* carregue(char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
-    // Abrir o arquivo binário para leitura
-    FILE *fb = fopen(nome_arquivo, "wb+");
+    // Abrir o arquivo binário para leitura e escrita sem sobreescrever
+    FILE *fb = fopen(nome_arquivo, "rb+");
 
     // Mover o ponteiro do arquivo para 81 caracteres antes do final
     fseek(fb, -81, SEEK_END);
@@ -143,14 +144,17 @@ FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
 void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 	FILE *f; //txt
 
+	//abrir o arquivo somente para ler o quadro
 	f = fopen(nome_arquivo, "r");
 	
+	//salvar quadro do txt no quadro atual do programa
 	for (int i = 0; i < 9; ++i) {
         for (int j = 0; j < 9; ++j) {
             fscanf(f, "%1d", (int*)&quadro[i][j]);
         }
     }
 
+	//arquivo fechado pois não será mais usado
     fclose(f);
 }
 
@@ -160,14 +164,19 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 FILE* crie_arquivo_binario(char quadro[9][9]) {
+	//variaveis para criação do arquivo
 	FILE *fb;
 	int jogadas = 1;
 	char nome[20];
-
+	
+	//geração de nome aleatório com 10 caracteres
 	gen_random(nome, 10);
 	strcat(nome, ".bin");
 
+	//criação de arquivo no modo de leitura e escrita que será usado futuramente no salve_jogada_bin
 	fb = fopen(nome, "wb+");
+
+	//iniciar arquivo com 1 jogada e 1 quadro, como solicitado
 	fwrite(&jogadas, sizeof(int), 1, fb);
 	fwrite(quadro, sizeof(char), 81, fb);
 
@@ -447,19 +456,18 @@ void resolve_um_passo(char quadro[9][9]) {
 void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
     int jogadas;
 
+	//ponteiro sempre alocado no começo para ler o n de jogadas atual
 	fseek(fb, 0, SEEK_SET);
     fread(&jogadas, sizeof(int), 1, fb);
-	printf("%d\n", jogadas);
-    jogadas = jogadas + 1;
-	printf("%d\n", jogadas);
+    jogadas = jogadas + 1; //adicionar uma jogada
 
+	//alocar novamente o ponteiro e reescrever o n de jogadas
     fseek(fb, 0, SEEK_SET);
     fwrite(&jogadas, sizeof(int), 1, fb);
 
+	//alocar ponteiro no final e escrever quadro atual
     fseek(fb, 0, SEEK_END);
     fwrite(quadro, sizeof(char), 9 * 9, fb);
-
-    fclose(fb);
 }
 
 
