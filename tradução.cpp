@@ -31,7 +31,7 @@ void traduzir_binario_para_texto(const char* arquivo_binario, const char* arquiv
 }
 
 int main() {
-    const char* arquivo_binario = "TYgLh3f6qZ.bin";
+    const char* arquivo_binario = "9YxhgLJWa8.bin";
     const char* arquivo_texto = "saida.txt";
 
     traduzir_binario_para_texto(arquivo_binario, arquivo_texto);

@@ -79,13 +79,13 @@ FILE* carregue(char quadro[9][9]) {
 			f = fopen(nome, "r");
 			if (f == NULL) {
 				printf(ERROR_FILE_MSG);
+				break;
 			}
 
 			else {
 				carregue_novo_jogo(quadro, nome);
 			}
 
-			return f;
 			break;
 		}
 		// continuar jogo
@@ -97,12 +97,13 @@ FILE* carregue(char quadro[9][9]) {
 			FILE *fb = fopen(nome, "rb");
 			if (fb == NULL) {
 				printf(ERROR_FILE_MSG);
-				return NULL;
+				break;
 			}
 			else {
 				carregue_continue_jogo(quadro, nome);
 			}
 
+			return fb;
 			break;
 		}
 		// retornar ao menu anterior
@@ -149,8 +150,6 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
             fscanf(f, "%1d", (int*)&quadro[i][j]);
         }
     }
-	
-	crie_arquivo_binario(quadro);
 
     fclose(f);
 }
@@ -448,7 +447,7 @@ void resolve_um_passo(char quadro[9][9]) {
 void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
     int jogadas;
 
-    fread(&jogadas, sizeof(char), 1, fb);
+    fread(&jogadas, sizeof(int), 1, fb);
     jogadas++;
 
     fseek(fb, 0, SEEK_SET);
