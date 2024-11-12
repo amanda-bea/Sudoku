@@ -1,3 +1,6 @@
+/* Trabalho Sudoku, AlgProg2
+   por Amanda Beatriz C. de Jesus e Ana Clara B. Ottoni*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -72,12 +75,13 @@ FILE* carregue(char quadro[9][9]) {
 			
 			printf("Qual é o nome do seu jogo.txt? ");
 			scanf("%s", &nome);
+
 			f = fopen(nome, "r");
 			if (f == NULL) {
 				printf(ERROR_FILE_MSG);
-				
 			}
-			else{
+
+			else {
 				carregue_novo_jogo(quadro, nome);
 			}
 
@@ -102,10 +106,10 @@ FILE* carregue(char quadro[9][9]) {
 			break;
 		}
 		// retornar ao menu anterior
-		case 9:
+		case 9: {
 			menu();
 			break;
-
+		}
 		default:
 		break;
 	}
@@ -149,7 +153,6 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 	crie_arquivo_binario(quadro);
 
     fclose(f);
-	//verificar se arquivo existe e é valido?
 }
 
 /* -----------------------------------------------------------------------------
@@ -380,6 +383,7 @@ void jogue() {
 		// resolva o sudoku completo
 		case 4:
 			resolve_completo(fb, quadro);
+			salve_jogada_bin(fb, quadro);
 			break;
 
 		case 9:
@@ -442,9 +446,6 @@ void resolve_um_passo(char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
-    //arquivo já vem aberto?
-	//quando imprimir?
-    fb = fopen("nome_arquivo", "r+b");
     int jogadas;
 
     fread(&jogadas, sizeof(char), 1, fb);
