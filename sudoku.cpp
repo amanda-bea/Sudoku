@@ -124,7 +124,7 @@ FILE* carregue(char quadro[9][9]) {
  */
 FILE* carregue_continue_jogo (char quadro[9][9], char *nome_arquivo) {
     // Abrir o arquivo binário para leitura
-    FILE *fb = fopen(nome_arquivo, "rb");
+    FILE *fb = fopen(nome_arquivo, "wb+");
 
     // Mover o ponteiro do arquivo para 81 caracteres antes do final
     fseek(fb, -81, SEEK_END);
@@ -167,7 +167,7 @@ FILE* crie_arquivo_binario(char quadro[9][9]) {
 	gen_random(nome, 10);
 	strcat(nome, ".bin");
 
-	fb = fopen(nome, "wb");
+	fb = fopen(nome, "wb+");
 	fwrite(&jogadas, sizeof(int), 1, fb);
 	fwrite(quadro, sizeof(char), 81, fb);
 
@@ -447,17 +447,21 @@ void resolve_um_passo(char quadro[9][9]) {
 void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
     int jogadas;
 
+	fseek(fb, 0, SEEK_SET);
     fread(&jogadas, sizeof(int), 1, fb);
-    jogadas++;
+	printf("%d\n", jogadas);
+    jogadas = jogadas + 1;
+	printf("%d\n", jogadas);
 
     fseek(fb, 0, SEEK_SET);
-    fwrite(&jogadas, sizeof(char), 1, fb);
+    fwrite(&jogadas, sizeof(int), 1, fb);
 
     fseek(fb, 0, SEEK_END);
     fwrite(quadro, sizeof(char), 9 * 9, fb);
 
     fclose(fb);
 }
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
