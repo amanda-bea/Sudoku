@@ -166,7 +166,7 @@ void carregue_novo_jogo(char quadro[9][9], char *nome_arquivo) {
 FILE* crie_arquivo_binario(char quadro[9][9]) {
 	//variaveis para criação do arquivo
 	FILE *fb;
-	int jogadas = 1;
+	int jogadas = 0;
 	char nome[20];
 	
 	//geração de nome aleatório com 10 caracteres
