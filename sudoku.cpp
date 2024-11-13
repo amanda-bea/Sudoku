@@ -233,12 +233,12 @@ int eh_valido(const char quadro[9][9], int x, int y, int valor) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 int eh_valido_na_coluna(const char quadro[9][9], int y, int valor) {
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 9; i++) // percorrendo a coluna y
 	{
-		if (valor == quadro[i][y])
-			return 0;
+		if (valor == quadro[i][y]) // se já houver o referido valor em alguma posição da coluna y
+			return 0; // entao retornar 0
 	}
-	return 1;
+	return 1; // caso não haja o valor na coluna y, retornar 1
 }
 
 /* -----------------------------------------------------------------------------
@@ -247,12 +247,12 @@ int eh_valido_na_coluna(const char quadro[9][9], int y, int valor) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 int eh_valido_na_linha(const char quadro[9][9], int x, int valor) {
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 9; i++) // percorrendo a linha x
 	{
-		if (valor == quadro[x][i])
-			return 0;
+		if (valor == quadro[x][i])  // se já houver o referido valor em alguma posição da linha x
+			return 0; // entao retornar 0
 	}
-	return 1;
+	return 1; // caso não haja o valor na linha x, retornar 1
 }
 
 /* -----------------------------------------------------------------------------
@@ -261,18 +261,20 @@ int eh_valido_na_linha(const char quadro[9][9], int x, int valor) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 int eh_valido_no_quadrante3x3(const char quadro[9][9], int x, int y, int valor) {
-	int q = determine_quadrante(x,y);
+	int q = determine_quadrante(x,y); // chama a função determine_quadrante, 
+	// que retorna o número do quadrante, e atribui tal valor a variavel q
 
+	// percorrendo o quadrante q
 	for (int i = ini_x(q); i < fim_x(q); i++)
 	{
 		for (int j = ini_y(q); j < fim_y(q); j++)
 		{
-			if(valor == quadro[i][j])
-				return 0;
+			if(valor == quadro[i][j]) // se já houver o referido valor em alguma posição do quadrante q
+				return 0; // entao retornar 0
 		}
 	}
 
-	return 1;
+	return 1; // caso não haja o valor no quadrante q, retornar 1
 	
 }
 
@@ -424,22 +426,24 @@ void resolve_completo(FILE *fb, char quadro[9][9]) {
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  */
 void resolve_um_passo(char quadro[9][9]) {
+	// percorre a matriz quadro até encontrar um elemento igual a 0
 	for(int i = 0; i < 9; i++){
 		for (int j = 0; j < 9; j++)
 		{
-			int cont = 0;
-			int aux;
+			int cont = 0; // variável que conta quantas vezes existe um valor válido para a posição
+			int aux; // variável que guarda o valor válido
 
 			if(quadro[i][j] == 0){
 				for(int l = 1; l < 10; l++){
-					if(eh_valido(quadro, i, j, l)){
-						cont += 1;
-						aux = l;
+					if(eh_valido(quadro, i, j, l)){ // a cada iteração, é verificado se o valor de l é válido para tal posição
+						cont += 1; // se i valor l é valido para a posição, incrementar 1 a variavel cont 
+						aux = l; // e atribuir o valor de l a variável aux
 					}
 				}
 				
+				// se só houver um valor possível para a referida posição
 				if (cont == 1){
-					quadro[i][j] = aux;
+					quadro[i][j] = aux; // então atribuir o valor de aux a matriz do jogo
 					return;
 				}
 			}
@@ -460,6 +464,7 @@ void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
 	fseek(fb, 0, SEEK_SET);
     fread(&jogadas, sizeof(int), 1, fb);
     jogadas = jogadas + 1; //adicionar uma jogada
+	printf("%daa\n",jogadas);
 
 	//alocar novamente o ponteiro e reescrever o n de jogadas
     fseek(fb, 0, SEEK_SET);
