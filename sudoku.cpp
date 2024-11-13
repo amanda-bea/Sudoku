@@ -464,7 +464,6 @@ void salve_jogada_bin (FILE *fb, char quadro[9][9]) {
 	fseek(fb, 0, SEEK_SET);
     fread(&jogadas, sizeof(int), 1, fb);
     jogadas = jogadas + 1; //adicionar uma jogada
-	printf("%daa\n",jogadas);
 
 	//alocar novamente o ponteiro e reescrever o n de jogadas
     fseek(fb, 0, SEEK_SET);
